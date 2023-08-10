@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>style.qss</file>
+        <file>image/left.png</file>
+        <file>image/play.png</file>
+        <file>image/right.png</file>
+        <file>image/stop.png</file>
+        <file>image/files.png</file>
+        <file>image/sound.png</file>
+        <file>image/list.png</file>
+        <file>image/pause.png</file>
+        <file>image/mute.png</file>
+        <file>image/music.png</file>
+        <file>image/video.png</file>
+        <file>image/camera.png</file>
+    </qresource>
+</RCC>
