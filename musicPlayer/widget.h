@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
+#include <videowin.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
@@ -16,6 +17,14 @@ class Widget : public QWidget
 public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
+
+public slots:
+    void getsoundwinshow();
+
+
+signals:
+    void videoshow();
+
 
 private slots:
     void onStateChanged(QMediaPlayer::State state);
@@ -50,6 +59,9 @@ private:
     int i = 0;
     bool m_soundflag = false;       //声音标志
     int  m_soundvalue;      //当前音量
+
+
+    VideoWin *video; //视频播放器
 
 };
 #endif // WIDGET_H

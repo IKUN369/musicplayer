@@ -10,9 +10,13 @@ Widget::Widget(QWidget *parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);
+
+    video = new VideoWin();
+    connect(video, &VideoWin::soundwinshow, this, &Widget::getsoundwinshow);
+    connect(this, &Widget::videoshow, video, &VideoWin::getvideoshow);
+
     setWindowIcon(QIcon(":/image/music.png"));
     setWindowTitle("音乐播放器1.0");
-
     //实例化一个媒体播放类和一个播放列表类
     player = new QMediaPlayer(this);//播放器
     playlist = new QMediaPlaylist(this);//播放列表
@@ -35,6 +39,12 @@ Widget::Widget(QWidget *parent)
 Widget::~Widget()
 {
     delete ui;
+    delete video;
+}
+
+void Widget::getsoundwinshow()
+{
+    this->show();
 }
 
 //播放状态变化更改图标
@@ -134,7 +144,7 @@ void Widget::on_play_clicked()
 {
     if (playlist->currentIndex() < 0)
         playlist->setCurrentIndex(0);
-    if (!m_playflag)
+    if (m_playflag)
         player->play();
     else
         player->pause();
@@ -177,5 +187,6 @@ void Widget::on_playSlider_valueChanged(int value)
 
 void Widget::on_video_clicked()
 {
-
+    emit videoshow();
+    this->close();
 }

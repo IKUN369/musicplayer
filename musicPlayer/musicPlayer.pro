@@ -1,6 +1,5 @@
-QT       += core gui multimedia
+QT       += core gui multimedia multimediawidgets
 
-QT       += multimediawidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
