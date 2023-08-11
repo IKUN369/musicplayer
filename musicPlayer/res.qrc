@@ -16,5 +16,6 @@
         <file>image/back.png</file>
         <file>image/up.png</file>
         <file>image/down.png</file>
+        <file>image/X.png</file>
     </qresource>
 </RCC>

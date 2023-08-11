@@ -60,7 +60,7 @@ void Widget::onStateChanged(QMediaPlayer::State state)
     }
     if(state == QMediaPlayer::StoppedState)
     {
-        ui->play->setIcon(QIcon(":/image/pause.png"));
+        ui->play->setIcon(QIcon(":/image/X.png"));
     }
 }
 
@@ -179,7 +179,7 @@ void Widget::on_sound_clicked()
     }
     m_soundflag = !m_soundflag;
 }
-
+//调节进度条
 void Widget::on_playSlider_valueChanged(int value)
 {
     player->setPosition(value);

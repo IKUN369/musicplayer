@@ -14,10 +14,13 @@ VideoWin::VideoWin(QWidget *parent) :
     this->resize(1920, 1080);
     ui->label->resize(1500, 800);
 
+
+    player = new QMediaPlayer(this);
+    playlist = new QMediaPlaylist(this);
+    playlist->setPlaybackMode(QMediaPlaylist::Loop); //循环模式
     videowidget = new QVideoWidget(ui->label);
     videowidget->resize(ui->label->size());
-    player = new QMediaPlayer(this);
-//    player->setNotifyInterval(2000);//设置更新时间
+    player->setPlaylist(playlist);
     player->setVideoOutput(videowidget);  //设置视频显示图形界面组
 
     connect(player,SIGNAL(stateChanged(QMediaPlayer::State)),
@@ -28,6 +31,8 @@ VideoWin::VideoWin(QWidget *parent) :
 
     connect(player,SIGNAL(durationChanged(qint64)),
             this, SLOT(onDurationChanged(qint64)));
+    connect(playlist,SIGNAL(currentIndexChanged(int)),
+            this, SLOT(onPlaylistChanged(int)));
 }
 
 VideoWin::~VideoWin()
@@ -53,7 +58,7 @@ void VideoWin::onStateChanged(QMediaPlayer::State state)
     }
     if(state == QMediaPlayer::StoppedState)
     {
-        ui->buttonplay->setIcon(QIcon(":/image/pause.png"));
+        ui->buttonplay->setIcon(QIcon(":/image/X.png"));
     }
 }
 //获取播放总时长
@@ -79,20 +84,39 @@ void VideoWin::onPositionChanged(qint64 position)
     ui->labelTome->setText(m_positionTime + "/" + m_durationTime);
 }
 
+void VideoWin::onPlaylistChanged(int postion)
+{
+    ui->listWidget->setCurrentRow(postion);
+    QListWidgetItem *item = ui->listWidget->currentItem();
+    if (item)
+    {
+        ui->labelcurmedia->setText(item->text());
+    }
+}
+
 // 打开文件
 void VideoWin::on_buttonselect_clicked()
 {
     QString dlgTitle="选择视频文件";
-    QString filter="mp4文件(*.mp4);;wmv文件(*.wmv);;所有文件(*.*)";
-    QString afile = QFileDialog::getOpenFileName(this,dlgTitle,"E://QT//视频素材",filter);
-    if(afile.isEmpty()){
+    QString filter="mp4文件(*.mp4);;所有文件(*.*);;wmv文件(*.wmv)";
+    QStringList filenamelist = QFileDialog::getOpenFileNames(this,dlgTitle,"E://QT//视频素材",filter);
+    if(filenamelist.isEmpty()){
         return;
     }
-    QFileInfo fileInfo(afile);
-    //将选择的文件显示在标签框上
-    ui->labelcurmedia->setText(fileInfo.fileName());
-    //设置播放文件
-    player->setMedia(QUrl::fromLocalFile(afile));
+    playlist->clear();
+    for(int i = 0;i<filenamelist.count();i++)
+    {
+        //将选择的文件加入播放列表
+        playlist->addMedia(QUrl::fromLocalFile(filenamelist.at(i)));
+        //将选择的文件显示在文本框上
+        QFileInfo fileInfo(filenamelist.at(i));
+        ui->listWidget->addItem(fileInfo.fileName());
+    }
+
+    if (player->state() != QMediaPlayer::PlayingState)
+    {
+        playlist->setCurrentIndex(0);
+    }
     player->play();
 }
 
@@ -106,14 +130,16 @@ void VideoWin::on_buttonplay_clicked()
     m_playflag = !m_playflag;
 }
 
-//停止播放
+//清空播放列表播放
 void VideoWin::on_buttonstop_clicked()
 {
+    playlist->clear();
+    ui->listWidget->clear();
     player->stop();
 }
 
 //调节音量
-void VideoWin::on_verticalSlider_valueChanged(int value)
+void VideoWin::on_Slidersound_valueChanged(int value)
 {
     player->setVolume(value);
     if (ui->Slidersound->value() == 0)
@@ -148,4 +174,16 @@ void VideoWin::on_buttonback_clicked()
 {
     emit soundwinshow();
     this->close();
+}
+
+//选择视频
+void VideoWin::on_listWidget_doubleClicked(const QModelIndex &index)
+{
+    int rowNo = index.row();
+    playlist->setCurrentIndex(rowNo);
+}
+
+void VideoWin::on_Slidervideo_valueChanged(int value)
+{
+    player->setPosition(value);
 }
