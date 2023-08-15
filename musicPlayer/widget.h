@@ -48,6 +48,10 @@ private slots:
 
     void on_video_clicked();
 
+    void on_last_clicked();
+
+    void on_next_clicked();
+
 private:
     Ui::Widget *ui;
     QMediaPlayer    *player;//播放器
@@ -56,7 +60,7 @@ private:
     QString  m_durationTime;//总长度
     QString  m_positionTime;//当前播放到位置
     bool m_playflag = false;        //播放标志
-    int i = 0;
+    int i = 0;                      //playlist索引
     bool m_soundflag = false;       //声音标志
     int  m_soundvalue;      //当前音量
 

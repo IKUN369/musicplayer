@@ -137,7 +137,7 @@ void Widget::on_listWidget_doubleClicked(const QModelIndex &index)
 {
     int rowNo = index.row();
     playlist->setCurrentIndex(rowNo);
-    
+    i = rowNo;
 }
 //播放与暂停
 void Widget::on_play_clicked()
@@ -189,4 +189,23 @@ void Widget::on_video_clicked()
 {
     emit videoshow();
     this->close();
+}
+
+//切换上一首歌曲
+void Widget::on_last_clicked()
+{
+    i--;
+    if(i >= 0)
+    {
+        playlist->setCurrentIndex(i);
+    }
+}
+//切换下一首
+void Widget::on_next_clicked()
+{
+    i++;
+    if(i <= ui->listWidget->count())
+    {
+        playlist->setCurrentIndex(i);
+    }
 }
